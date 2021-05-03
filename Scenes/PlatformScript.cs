@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Platform : MonoBehaviour
+public class PlatformScript : MonoBehaviour
 {
     public GameObject leftMover;
     public GameObject rightMover;
@@ -10,7 +10,7 @@ public class Platform : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {       
+    {
     }
 
     // Update is called once per frame
@@ -21,7 +21,7 @@ public class Platform : MonoBehaviour
         {
             foreach (Touch touch in Input.touches)
             {
-                Vector2 touchPos = Camera.main.ScreenToWorldPoint(touch.position);               
+                Vector2 touchPos = Camera.main.ScreenToWorldPoint(touch.position);
 
                 if (touchPos.x > 0)
                 {
@@ -33,11 +33,11 @@ public class Platform : MonoBehaviour
                     float yDiff = touchPos.y - leftMover.transform.position.y;
                     leftMover.transform.position += new Vector3(0, yDiff * Time.deltaTime * moverSpeed, 0);
                 }
-            }            
+            }
         }
 
         //Handle mouse clicks
-        if(Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0))
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
 
@@ -63,6 +63,6 @@ public class Platform : MonoBehaviour
         float sign = (rightMover.transform.position.y < leftMover.transform.position.y) ? -1.0f : 1.0f;
         float rotation = Vector2.Angle(Vector2.right, diference) * sign;
         transform.localEulerAngles = new Vector3(0, 0, rotation);
-       
+
     }
 }
