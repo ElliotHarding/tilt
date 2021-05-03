@@ -4,17 +4,12 @@ using UnityEngine;
 
 public class PlatformScript : MonoBehaviour
 {
-    public GameObject leftMover;
-    public GameObject rightMover;
-    public float moverSpeed = 10;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
+    public GameObject m_leftMover;
+    public GameObject m_rightMover;
+    public float m_moverSpeed = 10;
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         // Handle screen touches.
         if (Input.touchCount > 0)
@@ -25,13 +20,13 @@ public class PlatformScript : MonoBehaviour
 
                 if (touchPos.x > 0)
                 {
-                    float yDiff = touchPos.y - rightMover.transform.position.y;
-                    rightMover.transform.position += new Vector3(0, yDiff * Time.deltaTime * moverSpeed, 0);
+                    float yDiff = touchPos.y - m_rightMover.transform.position.y;
+                    m_rightMover.transform.position += new Vector3(0, yDiff * Time.deltaTime * m_moverSpeed, 0);
                 }
                 else
                 {
-                    float yDiff = touchPos.y - leftMover.transform.position.y;
-                    leftMover.transform.position += new Vector3(0, yDiff * Time.deltaTime * moverSpeed, 0);
+                    float yDiff = touchPos.y - m_leftMover.transform.position.y;
+                    m_leftMover.transform.position += new Vector3(0, yDiff * Time.deltaTime * m_moverSpeed, 0);
                 }
             }
         }
@@ -43,26 +38,31 @@ public class PlatformScript : MonoBehaviour
 
             if (mousePos.x > 0)
             {
-                float yDiff = mousePos.y - rightMover.transform.position.y;
-                rightMover.transform.position += new Vector3(0, yDiff * Time.deltaTime * moverSpeed, 0);
+                float yDiff = mousePos.y - m_rightMover.transform.position.y;
+                m_rightMover.transform.position += new Vector3(0, yDiff * Time.deltaTime * m_moverSpeed, 0);
             }
             else
             {
-                float yDiff = mousePos.y - leftMover.transform.position.y;
-                leftMover.transform.position += new Vector3(0, yDiff * Time.deltaTime * moverSpeed, 0);
+                float yDiff = mousePos.y - m_leftMover.transform.position.y;
+                m_leftMover.transform.position += new Vector3(0, yDiff * Time.deltaTime * m_moverSpeed, 0);
             }
         }
 
 
         //Set platform position
-        Vector3 midpoint = new Vector3(0, (rightMover.transform.position.y + leftMover.transform.position.y) / 2);
+        Vector3 midpoint = new Vector3(0, (m_rightMover.transform.position.y + m_leftMover.transform.position.y) / 2);
         transform.position = midpoint;
 
         //Set platform rotation
-        Vector2 diference = rightMover.transform.position - leftMover.transform.position;
-        float sign = (rightMover.transform.position.y < leftMover.transform.position.y) ? -1.0f : 1.0f;
+        Vector2 diference = m_rightMover.transform.position - m_leftMover.transform.position;
+        float sign = (m_rightMover.transform.position.y < m_leftMover.transform.position.y) ? -1.0f : 1.0f;
         float rotation = Vector2.Angle(Vector2.right, diference) * sign;
-        transform.localEulerAngles = new Vector3(0, 0, rotation);
 
+        if (rotation > 15)
+            rotation = 15;
+        if (rotation < -15)
+            rotation = -15;
+
+        transform.localEulerAngles = new Vector3(0, 0, rotation);
     }
 }
