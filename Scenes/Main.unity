@@ -156,7 +156,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_leftMover: {fileID: 1293520345}
   m_rightMover: {fileID: 1095489130}
-  m_moverSpeed: 10
+  m_moverSpeed: 2
 --- !u!212 &170322273
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -289,6 +289,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ball: {fileID: 990075173}
   m_zPosition: -1
+  m_moveSpeed: 1
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
