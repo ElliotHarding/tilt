@@ -29,6 +29,8 @@ public class PlatformScript : MonoBehaviour
                     m_leftMover.transform.position += new Vector3(0, yDiff * Time.deltaTime * m_moverSpeed, 0);
                 }
             }
+
+            setPlatformPositionAndRotation();
         }
 
         //Handle mouse clicks
@@ -46,9 +48,16 @@ public class PlatformScript : MonoBehaviour
                 float yDiff = mousePos.y - m_leftMover.transform.position.y;
                 m_leftMover.transform.position += new Vector3(0, yDiff * Time.deltaTime * m_moverSpeed, 0);
             }
+
+            setPlatformPositionAndRotation();
         }
 
 
+        
+    }
+
+    void setPlatformPositionAndRotation()
+    {
         //Set platform position
         Vector3 midpoint = new Vector3(0, (m_rightMover.transform.position.y + m_leftMover.transform.position.y) / 2);
         transform.position = midpoint;
