@@ -8,6 +8,16 @@ public class PlatformScript : MonoBehaviour
     public GameObject m_rightMover;
     public float m_moverSpeed = 10;
 
+    //wall spawning stuff
+    public GameObject m_rightWall;
+    public GameObject m_leftWall;
+    public float m_rightWallPos = 7;
+    public float m_leftWallPos = -7;
+    public const int m_cSpawnBufferHeight = 10;
+    public const int m_cWallDeletionHeight = 50;
+    private float m_wallSpawnHeight = -10;
+    private List<GameObject> m_walls = new List<GameObject>();
+
     // Update is called once per frame
     void FixedUpdate()
     {
@@ -52,8 +62,26 @@ public class PlatformScript : MonoBehaviour
             setPlatformPositionAndRotation();
         }
 
+        //Check if need to spawn new set of walls
+        if(transform.position.y + m_cSpawnBufferHeight > m_wallSpawnHeight)
+        {
+            GameObject newRightWall = Instantiate(m_rightWall, new Vector3(m_rightWallPos, m_wallSpawnHeight, 0), m_rightWall.transform.rotation);
+            GameObject newLeftWall = Instantiate(m_leftWall, new Vector3(m_leftWallPos, m_wallSpawnHeight, 0), m_leftWall.transform.rotation);
 
-        
+            m_walls.Add(newRightWall);
+            m_walls.Add(newLeftWall);
+
+            m_wallSpawnHeight += 10;
+        }
+
+        for(int i = 0; i < m_walls.Count; i++)
+        {
+            if (m_walls[i].transform.position.y < m_cWallDeletionHeight - m_cSpawnBufferHeight)
+            {
+                Destroy(m_walls[i]);
+                m_walls.RemoveAt(i);
+            }
+        }
     }
 
     void setPlatformPositionAndRotation()
