@@ -14,7 +14,6 @@ public class PlatformScript : MonoBehaviour
     public float m_rightWallPos = 7;
     public float m_leftWallPos = -7;
     public const int m_cSpawnBufferHeight = 10;
-    public const int m_cWallDeletionHeight = 10;
     private float m_wallSpawnHeight = -10;
     private float m_bottomWallSpawnHeight = 10;
     private List<GameObject> m_walls = new List<GameObject>();
@@ -72,11 +71,9 @@ public class PlatformScript : MonoBehaviour
             m_walls.Add(newRightWall);
             m_walls.Add(newLeftWall);
 
-            m_wallSpawnHeight += 10;
-            m_bottomWallSpawnHeight += 10;
+            m_wallSpawnHeight += m_cSpawnBufferHeight;
         }
 
-        //Broken code:
         if(transform.position.y - m_cSpawnBufferHeight < m_bottomWallSpawnHeight)
         {
             GameObject newRightWall = Instantiate(m_rightWall, new Vector3(m_rightWallPos, m_bottomWallSpawnHeight, 0), m_rightWall.transform.rotation);
@@ -85,20 +82,27 @@ public class PlatformScript : MonoBehaviour
             m_walls.Add(newRightWall);
             m_walls.Add(newLeftWall);
 
-            m_bottomWallSpawnHeight -= 10;
+            m_bottomWallSpawnHeight -= m_cSpawnBufferHeight;
         }
 
         //Check to delete old walls
         for(int i = 0; i < m_walls.Count; i++)
         {
-            if (m_walls[i].transform.position.y < transform.position.y - m_cWallDeletionHeight)
+            if (m_walls[i].transform.position.y < transform.position.y - m_cSpawnBufferHeight)
             {
                 Destroy(m_walls[i]);
                 m_walls.RemoveAt(i);
+                m_bottomWallSpawnHeight += m_cSpawnBufferHeight / 2;
                 continue;
             }
 
-            //todo delete above...
+            if(m_walls[i].transform.position.y > transform.position.y + m_cSpawnBufferHeight)
+            {
+                Destroy(m_walls[i]);
+                m_walls.RemoveAt(i);
+                m_wallSpawnHeight -= m_cSpawnBufferHeight / 2;
+                continue;
+            }
         }
     }
 
