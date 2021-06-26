@@ -16,6 +16,7 @@ public class PlatformScript : MonoBehaviour
     public const int m_cSpawnBufferHeight = 10;
     public const int m_cWallDeletionHeight = 10;
     private float m_wallSpawnHeight = -10;
+    private float m_bottomWallSpawnHeight = 10;
     private List<GameObject> m_walls = new List<GameObject>();
 
     // Update is called once per frame
@@ -72,6 +73,19 @@ public class PlatformScript : MonoBehaviour
             m_walls.Add(newLeftWall);
 
             m_wallSpawnHeight += 10;
+            m_bottomWallSpawnHeight += 10;
+        }
+
+        //Broken code:
+        if(transform.position.y - m_cSpawnBufferHeight < m_bottomWallSpawnHeight)
+        {
+            GameObject newRightWall = Instantiate(m_rightWall, new Vector3(m_rightWallPos, m_bottomWallSpawnHeight, 0), m_rightWall.transform.rotation);
+            GameObject newLeftWall = Instantiate(m_leftWall, new Vector3(m_leftWallPos, m_bottomWallSpawnHeight, 0), m_leftWall.transform.rotation);
+
+            m_walls.Add(newRightWall);
+            m_walls.Add(newLeftWall);
+
+            m_bottomWallSpawnHeight -= 10;
         }
 
         //Check to delete old walls
@@ -81,7 +95,10 @@ public class PlatformScript : MonoBehaviour
             {
                 Destroy(m_walls[i]);
                 m_walls.RemoveAt(i);
+                continue;
             }
+
+            //todo delete above...
         }
     }
 
