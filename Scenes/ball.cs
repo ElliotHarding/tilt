@@ -20,7 +20,7 @@ public class ball : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D col)
     {
-        if(col.gameObject.name.Contains("wall"))
+        if(col.gameObject.name.Contains("wall") || col.gameObject.name.Contains("Spike"))
         {
             Time.timeScale = 0;
             m_gameOverPanel.SetActive(true);

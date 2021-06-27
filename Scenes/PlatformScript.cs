@@ -5,6 +5,7 @@ using System;
 
 public class PlatformScript : MonoBehaviour
 {
+    //Platform movement
     public GameObject m_leftMover;
     public GameObject m_rightMover;
     public float m_moverSpeed = 10;
@@ -19,7 +20,10 @@ public class PlatformScript : MonoBehaviour
     private const int m_cWallsSize = 3;
     private int m_bottomWallsIndex = 0;
     private int m_topWallsIndex = m_cWallsSize - 1;
-    private List<Tuple<GameObject, GameObject>> m_walls = new List<Tuple<GameObject, GameObject>>();    
+    private List<Tuple<GameObject, GameObject>> m_walls = new List<Tuple<GameObject, GameObject>>();
+
+    //Spike ball spawning stuff
+    public GameObject m_spikeBallPrefab;
 
     void Start()
     {
@@ -40,8 +44,7 @@ public class PlatformScript : MonoBehaviour
         m_walls.Add(new Tuple<GameObject, GameObject>(newLeftWall2, newRightWall2));
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         // Handle screen touches.
         if (Input.touchCount > 0)
@@ -84,12 +87,14 @@ public class PlatformScript : MonoBehaviour
             setPlatformPositionAndRotation();
         }
 
+        //Check if were moving up and organise walls appropriatly
         if(transform.position.y - m_wallSpawnYPosition > m_wallHeight)
         {
             swapWallsUp();
             m_wallSpawnYPosition = transform.position.y;
         }
 
+        //Check if were moving down and organise walls appropriatly
         if(m_wallSpawnYPosition - transform.position.y > m_wallHeight)
         {
             swapWallsDown();
