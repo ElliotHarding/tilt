@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class PlatformScript : MonoBehaviour
 {
@@ -15,29 +16,24 @@ public class PlatformScript : MonoBehaviour
     public float m_leftWallPos = -7;
     public float m_wallHeight = 10;
     private const int m_cWallsSize = 3;
-    private int m_leftWallIndex = 0;
-    private int m_rightWallIndex = m_cWallsSize - 1;
-    private List<GameObject> m_leftWalls = new List<GameObject>();
-    private List<GameObject> m_rightWalls = new List<GameObject>();
+    private int m_bottomWallsIndex = 0;
+    private int m_topWallsIndex = m_cWallsSize - 1;
+    private List<Tuple<GameObject, GameObject>> m_walls = new List<Tuple<GameObject, GameObject>>();    
 
     void Start()
-    {
-        GameObject newRightWall = Instantiate(m_rightWall, new Vector3(m_rightWallPos, -m_wallHeight, 0), m_rightWall.transform.rotation);
+    {        
         GameObject newLeftWall = Instantiate(m_leftWall, new Vector3(m_leftWallPos, -m_wallHeight, 0), m_leftWall.transform.rotation);
+        GameObject newRightWall = Instantiate(m_rightWall, new Vector3(m_rightWallPos, -m_wallHeight, 0), m_rightWall.transform.rotation);
 
-        GameObject newRightWall1 = Instantiate(m_rightWall, new Vector3(m_rightWallPos, 0, 0), m_rightWall.transform.rotation);
         GameObject newLeftWall1 = Instantiate(m_leftWall, new Vector3(m_leftWallPos, 0, 0), m_leftWall.transform.rotation);
+        GameObject newRightWall1 = Instantiate(m_rightWall, new Vector3(m_rightWallPos, 0, 0), m_rightWall.transform.rotation);
 
-        GameObject newRightWall2 = Instantiate(m_rightWall, new Vector3(m_rightWallPos, m_wallHeight, 0), m_rightWall.transform.rotation);
         GameObject newLeftWall2 = Instantiate(m_leftWall, new Vector3(m_leftWallPos, m_wallHeight, 0), m_leftWall.transform.rotation);
-
-        m_rightWalls.Add(newRightWall);
-        m_leftWalls.Add(newLeftWall);
-        m_rightWalls.Add(newRightWall1);
-        m_leftWalls.Add(newLeftWall1);
-        m_rightWalls.Add(newRightWall2);
-        m_leftWalls.Add(newLeftWall2);
-
+        GameObject newRightWall2 = Instantiate(m_rightWall, new Vector3(m_rightWallPos, m_wallHeight, 0), m_rightWall.transform.rotation);
+        
+        m_walls.Add(new Tuple<GameObject, GameObject>(newLeftWall, newRightWall));
+        m_walls.Add(new Tuple<GameObject, GameObject>(newLeftWall1, newRightWall1));
+        m_walls.Add(new Tuple<GameObject, GameObject>(newLeftWall2, newRightWall2));
     }
 
     // Update is called once per frame
@@ -89,23 +85,36 @@ public class PlatformScript : MonoBehaviour
             Debug.Log("space pressed");
             swapWallsUp();
         }
+
+        if (Input.GetKeyUp(KeyCode.Q))
+        {
+            Debug.Log("Q pressed");
+            swapWallsDown();
+        }
     }
 
     void swapWallsDown()
     {
+        m_walls[m_topWallsIndex].Item1.transform.position = m_walls[m_bottomWallsIndex].Item1.transform.position + new Vector3(0, -m_wallHeight);
+        m_walls[m_topWallsIndex].Item2.transform.position = m_walls[m_bottomWallsIndex].Item2.transform.position + new Vector3(0, -m_wallHeight);
 
+        m_bottomWallsIndex = m_topWallsIndex;
+        m_topWallsIndex--;
+
+        if (m_topWallsIndex == -1)
+            m_topWallsIndex = m_cWallsSize -1;
     }
 
     void swapWallsUp()
     {
-        m_rightWalls[m_leftWallIndex].transform.position = m_rightWalls[m_rightWallIndex].transform.position + new Vector3(0, m_wallHeight);
-        m_leftWalls[m_leftWallIndex].transform.position = m_leftWalls[m_rightWallIndex].transform.position + new Vector3(0, m_wallHeight);
+        m_walls[m_bottomWallsIndex].Item1.transform.position = m_walls[m_topWallsIndex].Item1.transform.position + new Vector3(0, m_wallHeight);
+        m_walls[m_bottomWallsIndex].Item2.transform.position = m_walls[m_topWallsIndex].Item2.transform.position + new Vector3(0, m_wallHeight);
 
-        m_rightWallIndex = m_leftWallIndex;
-        m_leftWallIndex++;
+        m_topWallsIndex = m_bottomWallsIndex;
+        m_bottomWallsIndex++;
 
-        if(m_leftWallIndex == m_cWallsSize)
-            m_leftWallIndex = 0;
+        if(m_bottomWallsIndex == m_cWallsSize)
+            m_bottomWallsIndex = 0;
     }
 
     void setPlatformPositionAndRotation()
