@@ -12,9 +12,9 @@ public class PlatformScript : MonoBehaviour
     //wall spawning stuff
     public GameObject m_rightWall;
     public GameObject m_leftWall;
-    public float m_rightWallPos = 7;
-    public float m_leftWallPos = -7;
+    private float m_wallSpawnX;
     public float m_wallHeight = 10;
+    public float m_wallWidth = 2;
     private float m_wallSpawnYPosition = 0;
     private const int m_cWallsSize = 3;
     private int m_bottomWallsIndex = 0;
@@ -22,15 +22,18 @@ public class PlatformScript : MonoBehaviour
     private List<Tuple<GameObject, GameObject>> m_walls = new List<Tuple<GameObject, GameObject>>();    
 
     void Start()
-    {        
-        GameObject newLeftWall = Instantiate(m_leftWall, new Vector3(m_leftWallPos, -m_wallHeight, 0), m_leftWall.transform.rotation);
-        GameObject newRightWall = Instantiate(m_rightWall, new Vector3(m_rightWallPos, -m_wallHeight, 0), m_rightWall.transform.rotation);
+    {
+        Vector3 screenSize = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
+        m_wallSpawnX = screenSize.x - m_wallWidth;
 
-        GameObject newLeftWall1 = Instantiate(m_leftWall, new Vector3(m_leftWallPos, 0, 0), m_leftWall.transform.rotation);
-        GameObject newRightWall1 = Instantiate(m_rightWall, new Vector3(m_rightWallPos, 0, 0), m_rightWall.transform.rotation);
+        GameObject newLeftWall = Instantiate(m_leftWall, new Vector3(-m_wallSpawnX, -m_wallHeight, 0), m_leftWall.transform.rotation);
+        GameObject newRightWall = Instantiate(m_rightWall, new Vector3(m_wallSpawnX, -m_wallHeight, 0), m_rightWall.transform.rotation);
 
-        GameObject newLeftWall2 = Instantiate(m_leftWall, new Vector3(m_leftWallPos, m_wallHeight, 0), m_leftWall.transform.rotation);
-        GameObject newRightWall2 = Instantiate(m_rightWall, new Vector3(m_rightWallPos, m_wallHeight, 0), m_rightWall.transform.rotation);
+        GameObject newLeftWall1 = Instantiate(m_leftWall, new Vector3(-m_wallSpawnX, 0, 0), m_leftWall.transform.rotation);
+        GameObject newRightWall1 = Instantiate(m_rightWall, new Vector3(m_wallSpawnX, 0, 0), m_rightWall.transform.rotation);
+
+        GameObject newLeftWall2 = Instantiate(m_leftWall, new Vector3(-m_wallSpawnX, m_wallHeight, 0), m_leftWall.transform.rotation);
+        GameObject newRightWall2 = Instantiate(m_rightWall, new Vector3(m_wallSpawnX, m_wallHeight, 0), m_rightWall.transform.rotation);
         
         m_walls.Add(new Tuple<GameObject, GameObject>(newLeftWall, newRightWall));
         m_walls.Add(new Tuple<GameObject, GameObject>(newLeftWall1, newRightWall1));
@@ -79,18 +82,6 @@ public class PlatformScript : MonoBehaviour
             }
 
             setPlatformPositionAndRotation();
-        }
-
-        if(Input.GetKeyUp(KeyCode.Space))
-        {
-            Debug.Log("space pressed");
-            swapWallsUp();
-        }
-
-        if (Input.GetKeyUp(KeyCode.Q))
-        {
-            Debug.Log("Q pressed");
-            swapWallsDown();
         }
 
         if(transform.position.y - m_wallSpawnYPosition > m_wallHeight)
