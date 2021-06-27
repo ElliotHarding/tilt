@@ -22,7 +22,8 @@ public class ball : MonoBehaviour
     {
         if(col.gameObject.name.Contains("wall"))
         {
-            Debug.Log("Collided with wall");
+            Time.timeScale = 0;
+            m_gameOverPanel.SetActive(true);
         }
         
     }
