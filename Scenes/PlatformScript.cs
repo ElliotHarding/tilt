@@ -15,6 +15,7 @@ public class PlatformScript : MonoBehaviour
     public float m_rightWallPos = 7;
     public float m_leftWallPos = -7;
     public float m_wallHeight = 10;
+    private float m_wallSpawnYPosition = 0;
     private const int m_cWallsSize = 3;
     private int m_bottomWallsIndex = 0;
     private int m_topWallsIndex = m_cWallsSize - 1;
@@ -90,6 +91,18 @@ public class PlatformScript : MonoBehaviour
         {
             Debug.Log("Q pressed");
             swapWallsDown();
+        }
+
+        if(transform.position.y - m_wallSpawnYPosition > m_wallHeight)
+        {
+            swapWallsUp();
+            m_wallSpawnYPosition = transform.position.y;
+        }
+
+        if(m_wallSpawnYPosition - transform.position.y > m_wallHeight)
+        {
+            swapWallsDown();
+            m_wallSpawnYPosition = transform.position.y;
         }
     }
 
