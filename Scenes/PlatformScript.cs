@@ -24,6 +24,9 @@ public class PlatformScript : MonoBehaviour
 
     //Enemies spawning stuff
     public GameObject m_spikeBallPrefab;
+    public GameObject m_leftGunPrefab;
+    public GameObject m_rightGunPrefab;
+    private int m_previousSpawnPrefabIndex = 0;
     private float m_enemySpawnYPosition = 0;
     private const int m_cEnemySpawnGap = 5;
     private List<GameObject> m_enemies = new List<GameObject>();
@@ -141,9 +144,36 @@ public class PlatformScript : MonoBehaviour
 
     void spawnEnemy(bool above)
     {
-        const int enemyWidth = 1; //Stops clipping into wall when spawned
-        GameObject newEnemy = Instantiate(m_spikeBallPrefab, new Vector3(UnityEngine.Random.Range(-m_distToWall + enemyWidth, m_distToWall - enemyWidth), transform.position.y + m_cEnemySpawnGap * (above ? 2 : -2), 0), m_spikeBallPrefab.transform.rotation);
+        //Randomly select enemy, position it randomly (unless gun)
+        GameObject chosenEnemyType;
+        Vector3 spawnLocation;
+        float spawnLocationY = transform.position.y + m_cEnemySpawnGap * (above ? 2 : -2);
 
+        //Choose a index for a prefab, cant be the same as the previous prefab spawned
+        int randomIndex = UnityEngine.Random.Range(0, 3);
+        while (randomIndex == m_previousSpawnPrefabIndex)
+            randomIndex = UnityEngine.Random.Range(0, 3);
+
+        m_previousSpawnPrefabIndex = randomIndex;
+
+        const int enemyWidth = 1; //Stops clipping into wall when spawned
+        if (randomIndex == 0)
+        {
+            chosenEnemyType = m_spikeBallPrefab;
+            spawnLocation = new Vector3(UnityEngine.Random.Range(-m_distToWall + enemyWidth, m_distToWall - enemyWidth), spawnLocationY, 0);
+        }
+        else if(randomIndex == 1)
+        {
+            chosenEnemyType = m_rightGunPrefab;
+            spawnLocation = new Vector3(-m_distToWall, spawnLocationY, 0);
+        }
+        else
+        {
+            chosenEnemyType = m_leftGunPrefab;
+            spawnLocation = new Vector3(m_distToWall, spawnLocationY, 0);
+        }
+
+        GameObject newEnemy = Instantiate(chosenEnemyType, spawnLocation, m_spikeBallPrefab.transform.rotation);
         m_enemies.Add(newEnemy);
     }
 
