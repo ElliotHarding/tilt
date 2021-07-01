@@ -13,7 +13,7 @@ public class PlatformScript : MonoBehaviour
     //wall spawning stuff
     public GameObject m_rightWall;
     public GameObject m_leftWall;
-    private float m_wallSpawnX;
+    private float m_distToWall; //The distance to screen walls in world coords
     public float m_wallHeight = 10;
     public float m_wallWidth = 2;
     private float m_wallSpawnYPosition = 0;
@@ -22,22 +22,25 @@ public class PlatformScript : MonoBehaviour
     private int m_topWallsIndex = m_cWallsSize - 1;
     private List<Tuple<GameObject, GameObject>> m_walls = new List<Tuple<GameObject, GameObject>>();
 
-    //Spike ball spawning stuff
+    //Enemies spawning stuff
     public GameObject m_spikeBallPrefab;
+    private float m_enemySpawnYPosition = 0;
+    private const int m_cEnemySpawnGap = 5;
+    private List<GameObject> m_enemies = new List<GameObject>();
 
     void Start()
     {
         Vector3 screenSize = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
-        m_wallSpawnX = screenSize.x - m_wallWidth;
+        m_distToWall = screenSize.x - m_wallWidth;
 
-        GameObject newLeftWall = Instantiate(m_leftWall, new Vector3(-m_wallSpawnX, -m_wallHeight, 0), m_leftWall.transform.rotation);
-        GameObject newRightWall = Instantiate(m_rightWall, new Vector3(m_wallSpawnX, -m_wallHeight, 0), m_rightWall.transform.rotation);
+        GameObject newLeftWall = Instantiate(m_leftWall, new Vector3(-m_distToWall, -m_wallHeight, 0), m_leftWall.transform.rotation);
+        GameObject newRightWall = Instantiate(m_rightWall, new Vector3(m_distToWall, -m_wallHeight, 0), m_rightWall.transform.rotation);
 
-        GameObject newLeftWall1 = Instantiate(m_leftWall, new Vector3(-m_wallSpawnX, 0, 0), m_leftWall.transform.rotation);
-        GameObject newRightWall1 = Instantiate(m_rightWall, new Vector3(m_wallSpawnX, 0, 0), m_rightWall.transform.rotation);
+        GameObject newLeftWall1 = Instantiate(m_leftWall, new Vector3(-m_distToWall, 0, 0), m_leftWall.transform.rotation);
+        GameObject newRightWall1 = Instantiate(m_rightWall, new Vector3(m_distToWall, 0, 0), m_rightWall.transform.rotation);
 
-        GameObject newLeftWall2 = Instantiate(m_leftWall, new Vector3(-m_wallSpawnX, m_wallHeight, 0), m_leftWall.transform.rotation);
-        GameObject newRightWall2 = Instantiate(m_rightWall, new Vector3(m_wallSpawnX, m_wallHeight, 0), m_rightWall.transform.rotation);
+        GameObject newLeftWall2 = Instantiate(m_leftWall, new Vector3(-m_distToWall, m_wallHeight, 0), m_leftWall.transform.rotation);
+        GameObject newRightWall2 = Instantiate(m_rightWall, new Vector3(m_distToWall, m_wallHeight, 0), m_rightWall.transform.rotation);
         
         m_walls.Add(new Tuple<GameObject, GameObject>(newLeftWall, newRightWall));
         m_walls.Add(new Tuple<GameObject, GameObject>(newLeftWall1, newRightWall1));
@@ -100,6 +103,48 @@ public class PlatformScript : MonoBehaviour
             swapWallsDown();
             m_wallSpawnYPosition = transform.position.y;
         }
+
+        //Check if we need to spawn enemy above
+        if (transform.position.y - m_enemySpawnYPosition > m_cEnemySpawnGap)
+        {
+            m_enemySpawnYPosition = transform.position.y;
+            spawnEnemy(true);
+
+            //Check if theres any enemies far away to be deleted
+            for (int i = 0; i < m_enemies.Count; i++)
+            {
+                if (m_enemies[i].transform.position.y < transform.position.y - m_cEnemySpawnGap * 4)
+                {
+                    Destroy(m_enemies[i]);
+                    m_enemies.RemoveAt(i);
+                }
+            }
+        }
+
+        //Check if we need to spawn enemy below
+        if (m_enemySpawnYPosition - transform.position.y > m_cEnemySpawnGap)
+        {
+            m_enemySpawnYPosition = transform.position.y;
+            spawnEnemy(false);
+
+            //Check if theres any enemies far away to be deleted
+            for (int i = 0; i < m_enemies.Count; i++)
+            {
+                if(m_enemies[i].transform.position.y > transform.position.y + m_cEnemySpawnGap*4)
+                {
+                    Destroy(m_enemies[i]);
+                    m_enemies.RemoveAt(i);
+                }
+            }
+        }
+    }
+
+    void spawnEnemy(bool above)
+    {
+        const int enemyWidth = 1; //Stops clipping into wall when spawned
+        GameObject newEnemy = Instantiate(m_spikeBallPrefab, new Vector3(UnityEngine.Random.Range(-m_distToWall + enemyWidth, m_distToWall - enemyWidth), transform.position.y + m_cEnemySpawnGap * (above ? 2 : -2), 0), m_spikeBallPrefab.transform.rotation);
+
+        m_enemies.Add(newEnemy);
     }
 
     void swapWallsDown()
