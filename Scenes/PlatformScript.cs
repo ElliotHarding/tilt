@@ -26,6 +26,7 @@ public class PlatformScript : MonoBehaviour
     public GameObject m_spikeBallPrefab;
     public GameObject m_leftGunPrefab;
     public GameObject m_rightGunPrefab;
+    public GameObject m_spikeCrossPrefab;
     private int m_previousSpawnPrefabIndex = 0;
     private float m_enemySpawnYPosition = 0;
     private const int m_cEnemySpawnGap = 5;
@@ -150,9 +151,9 @@ public class PlatformScript : MonoBehaviour
         float spawnLocationY = transform.position.y + m_cEnemySpawnGap * (above ? 2 : -2);
 
         //Choose a index for a prefab, cant be the same as the previous prefab spawned
-        int randomIndex = UnityEngine.Random.Range(0, 3);
+        int randomIndex = UnityEngine.Random.Range(0, 4);
         while (randomIndex == m_previousSpawnPrefabIndex)
-            randomIndex = UnityEngine.Random.Range(0, 3);
+            randomIndex = UnityEngine.Random.Range(0, 4);
 
         m_previousSpawnPrefabIndex = randomIndex;
 
@@ -167,10 +168,15 @@ public class PlatformScript : MonoBehaviour
             chosenEnemyType = m_rightGunPrefab;
             spawnLocation = new Vector3(-m_distToWall, spawnLocationY, 0);
         }
-        else
+        else if(randomIndex == 2)
         {
             chosenEnemyType = m_leftGunPrefab;
             spawnLocation = new Vector3(m_distToWall, spawnLocationY, 0);
+        }
+        else
+        {
+            chosenEnemyType = m_spikeCrossPrefab;
+            spawnLocation = new Vector3(UnityEngine.Random.Range(-m_distToWall + enemyWidth, m_distToWall - enemyWidth), spawnLocationY, 0);
         }
 
         GameObject newEnemy = Instantiate(chosenEnemyType, spawnLocation, m_spikeBallPrefab.transform.rotation);
