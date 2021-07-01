@@ -13,6 +13,7 @@ public class UiController : MonoBehaviour
 
     public void Home()
     {
+        Time.timeScale = 1;
         SceneManager.LoadScene("Home");
     }
 }

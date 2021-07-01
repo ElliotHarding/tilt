@@ -245,6 +245,7 @@ MonoBehaviour:
   m_spikeBallPrefab: {fileID: 6755669424406265235, guid: c0480afc272d8ba44b384936c9796ac6, type: 3}
   m_leftGunPrefab: {fileID: 4624010808951585935, guid: 653634606eeb4c1418775cf5fd6032f9, type: 3}
   m_rightGunPrefab: {fileID: 3791119813160440011, guid: cd7493b91cfe1d0428980a7ff90e148f, type: 3}
+  m_spikeCrossPrefab: {fileID: 6116255131923177642, guid: 80a65bfde057cea4890796721aec5dd5, type: 3}
 --- !u!212 &170322273
 SpriteRenderer:
   m_ObjectHideFlags: 0
