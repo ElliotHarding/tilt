@@ -37,7 +37,7 @@ public class PlatformScript : MonoBehaviour
     {
         Vector3 screenSize = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
         m_distToWall = screenSize.x - m_wallWidth;
-
+        
         GameObject newLeftWall = Instantiate(m_leftWall, new Vector3(-m_distToWall, -m_wallHeight, 0), m_leftWall.transform.rotation);
         GameObject newRightWall = Instantiate(m_rightWall, new Vector3(m_distToWall, -m_wallHeight, 0), m_rightWall.transform.rotation);
 
