@@ -9,6 +9,7 @@ public class PlatformScript : MonoBehaviour
     public GameObject m_leftMover;
     public GameObject m_rightMover;
     public float m_moverSpeed = 10;
+    public GameObject m_ball;
 
     //wall spawning stuff
     public GameObject m_rightWall;
@@ -230,5 +231,15 @@ public class PlatformScript : MonoBehaviour
             rotation = -15;
 
         transform.localEulerAngles = new Vector3(0, 0, rotation);
+
+        /*
+        float m = Mathf.Tan(rotation);
+        float c = transform.position.y + 0.25f - m * transform.position.x;
+        double dist = (Math.Abs(m * m_ball.transform.position.x + m_ball.transform.position.y + c)) / Math.Sqrt(m * m + 1);
+        if (dist < m_ball.transform.localScale.y)
+        {
+            double correctionDistance = m_ball.transform.localScale.y - dist;
+            m_ball.transform.position += new Vector3(0, (float)correctionDistance);
+        } */
     }
 }

@@ -238,6 +238,7 @@ MonoBehaviour:
   m_leftMover: {fileID: 1293520345}
   m_rightMover: {fileID: 1095489130}
   m_moverSpeed: 2
+  m_ball: {fileID: 990075173}
   m_rightWall: {fileID: 7012547475857935469, guid: 8f68795bd9c02524d890d89b2c4cc94e, type: 3}
   m_leftWall: {fileID: 6799011358602899850, guid: a972cb27a9cdbdb458f3af72cb977d7a, type: 3}
   m_wallHeight: 10
@@ -325,7 +326,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -4.6161947}
+  m_Offset: {x: 0, y: -4.58}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
