@@ -9,7 +9,6 @@ public class PlatformScript : MonoBehaviour
     public GameObject m_leftMover;
     public GameObject m_rightMover;
     public float m_moverSpeed = 10;
-    public GameObject m_ball;
 
     //wall spawning stuff
     public GameObject m_rightWall;
